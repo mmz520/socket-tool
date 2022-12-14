@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.mian.socketTool.util.DecoderUtils.bytesToHexString;
 
-public class MessageRunnable implements Runnable{
+public class ServerRunnable implements Runnable{
 
     private Map<String,Socket> socketMap=new ConcurrentHashMap<>();
     private ServerSocket serverSocket;
@@ -34,7 +34,7 @@ public class MessageRunnable implements Runnable{
         return socketMap;
     }
 
-    public MessageRunnable(ServerSocket serverSocket) {
+    public ServerRunnable(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 
@@ -57,21 +57,29 @@ public class MessageRunnable implements Runnable{
                 String host=socket.getRemoteSocketAddress().toString().replace("/","");
                 System.out.println("客户端"+host+"连接");
                 socketMap.put(host,socket);
-                while (running){
-                    InputStream stream=socket.getInputStream();
-                    int length = stream.available();
-                    if(length>0){
-                        byte[] bytes=new byte[length];
-                        stream.read(bytes);
-                        if(showMsg){
-                            if(hexOut){
-                                System.out.println(host+":"+bytesToHexString(bytes));
-                            }else {
-                                System.out.println(host+":"+new String(bytes, StandardCharsets.UTF_8));
+                Thread listener=new Thread(()->{
+                    while (running){
+                        try{
+                            InputStream stream=socket.getInputStream();
+                            int length = stream.available();
+                            if(length>0){
+                                byte[] bytes=new byte[length];
+                                stream.read(bytes);
+                                if(showMsg){
+                                    if(hexOut){
+                                        System.out.println(host+":"+bytesToHexString(bytes));
+                                    }else {
+                                        System.out.println(host+":"+new String(bytes, StandardCharsets.UTF_8));
+                                    }
+                                }
                             }
+                        } catch (IOException e) {
+                            System.out.println(e.getMessage());
+                            System.out.println("客户端可能已经离线");
                         }
                     }
-                }
+                });
+                listener.start();
             } catch (IOException e) {
                 System.out.println(e.getMessage());
                 System.out.println("客户端可能已经离线");

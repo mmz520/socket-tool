@@ -1,7 +1,15 @@
-package org.mian;
+package org.mian.socketTool;
+
+import org.mian.socketTool.util.CommandUtils;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Scanner scanner=new Scanner(System.in);
+        CommandUtils.chooseServer(scanner);
     }
+
+
+
 }
