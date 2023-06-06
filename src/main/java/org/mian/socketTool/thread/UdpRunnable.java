@@ -52,7 +52,7 @@ public class UdpRunnable implements Runnable{
                 if(length>0){
                     byte[] res=new byte[packet.getLength()];
                     System.arraycopy(buffer,0,res,0,res.length);
-                    String host=socket.getRemoteSocketAddress().toString().replace("/","");
+                    String host=socket.getRemoteSocketAddress()==null?"未知来源":socket.getRemoteSocketAddress().toString().replace("/","");
                     if(showMsg){
                         if(hexOut){
                             System.out.println(host+":"+bytesToHexString(res));

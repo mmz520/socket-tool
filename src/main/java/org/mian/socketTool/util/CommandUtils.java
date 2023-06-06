@@ -272,7 +272,7 @@ public class CommandUtils {
     }
 
     private static void sendCmd(String cmd, ServerRunnable runnable, boolean hex){
-        String[] array=cmd.trim().split(" ");
+        String[] array=cmd.trim().split("\\[|]");
         if(array.length==3){
             String msg=array[1];
             String host=array[2].trim();
@@ -297,7 +297,7 @@ public class CommandUtils {
     }
 
     private static void sendCmd(String cmd, Socket socket, boolean hex){
-        String[] array=cmd.trim().split(" ");
+        String[] array=cmd.trim().split("\\[|]");
         if(array.length==2){
             String msg=array[1];
             try {
@@ -315,7 +315,7 @@ public class CommandUtils {
     }
 
     private static void sendCmd(String cmd, DatagramSocket socket, boolean hex){
-        String[] array=cmd.trim().split(" ");
+        String[] array=cmd.trim().split("\\[|]");
         if(array.length==3){
             String msg=array[1];
             String host=array[2].trim();
